@@ -29,3 +29,30 @@ SELECT member, role, path
 FROM x
 ORDER BY member::text, role::text;
 ```
+
+# Check role permissions
+
+Check if a role has explicit permissions on a table
+
+```sql
+SELECT 
+    r.rolname,
+    CASE WHEN has_table_privilege('<role_name>', '<table_name>', 'SELECT') 
+         THEN 'YES' ELSE 'NO' END as can_select
+FROM pg_roles r 
+WHERE r.rolname = '<role_name>';
+```
+
+Check explicit permissions on a schema
+
+```sql
+SELECT 
+    r.rolname,
+    n.nspname,
+    CASE WHEN has_schema_privilege(r.rolname, n.nspname, 'USAGE') 
+         THEN 'YES' ELSE 'NO' END as has_usage
+FROM pg_roles r
+CROSS JOIN pg_namespace n
+WHERE r.rolname = '<role_name>'
+  AND n.nspname = '<nspname>';
+```
