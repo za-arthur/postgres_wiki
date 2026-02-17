@@ -56,3 +56,16 @@ CROSS JOIN pg_namespace n
 WHERE r.rolname = '<role_name>'
   AND n.nspname = '<nspname>';
 ```
+
+# Default privileges
+
+```sql
+SELECT
+    pg_get_userbyid(d.defaclrole) AS role,
+    n.nspname AS schema,
+    d.defaclobjtype AS object_type,
+    d.defaclacl
+FROM pg_default_acl d
+LEFT JOIN pg_namespace n ON n.oid = d.defaclnamespace
+ORDER BY role, schema, object_type;
+```
