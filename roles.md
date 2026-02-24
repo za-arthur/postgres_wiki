@@ -14,18 +14,20 @@ WHERE r.rolname = 'postgres';
 ```sql
 WITH RECURSIVE x AS
 (
-  SELECT member::regrole,
+  SELECT grantor::regrole AS granted_by,
+         member::regrole,
          roleid::regrole AS role,
          member::regrole || ' -> ' || roleid::regrole AS path
   FROM pg_auth_members AS m
   UNION ALL
-  SELECT x.member::regrole,
+  SELECT m.grantor::regrole,
+         x.member::regrole,
          m.roleid::regrole,
          x.path || ' -> ' || m.roleid::regrole
   FROM pg_auth_members AS m
     JOIN x ON m.member = x.role
   )
-SELECT member, role, path
+SELECT granted_by, member, role, path
 FROM x
 ORDER BY member::text, role::text;
 ```
