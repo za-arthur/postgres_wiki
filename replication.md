@@ -35,3 +35,9 @@ by the logical decoding on the standby (as it does not know about the
 catalog_xmin on the standby).
 
 More [info](https://github.com/postgres/postgres/commit/6af1793954e8c5e753af83c3edb37ed3267dd179).
+
+## Logical replication slots failover
+
+Links:
+- https://www.pgedge.com/blog/setting-up-failover-slots-in-postgresql-17
+- https://www.postgresql.org/docs/current/logical-replication-failover.html
