@@ -1,4 +1,6 @@
-# Replication lag
+# Queries
+
+## Replication lag
 
 ```sql
 select application_name,
@@ -15,3 +17,21 @@ select slot_name, slot_type, active,
 from pg_replication_slots s
 order by s.slot_name;
 ```
+
+# Logical replication
+
+## Logical replication slots on standby
+
+Logical replication slots are invalidated in the following cases:
+
+- hot_standby_feedback is off
+- hot_standby_feedback is on but there is no a physical slot between
+  the primary and the standby. Then, hot_standby_feedback will work,
+  but only while the connection is alive (for example a node restart
+  would break it)
+
+Then, the primary may delete system catalog rows that could be needed
+by the logical decoding on the standby (as it does not know about the
+catalog_xmin on the standby).
+
+More [info](https://github.com/postgres/postgres/commit/6af1793954e8c5e753af83c3edb37ed3267dd179).
